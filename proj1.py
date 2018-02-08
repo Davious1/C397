@@ -47,73 +47,77 @@
 import sys
 import re
 import os
-
+import argparse
+import nltk impor
+from collections import defaultdict
 takein = sys.stdin
+#ZONE SCORING
+'''
+How do we compute the score of a query-document pair?
+• If no query term occurs in the document: score should be 0.
+• The more frequent a query term in the document, the higher
+the score
+• The more query terms occur in the document, the higher the
+score
+We will look at a number of alternatives for doing this.
 
-def terms():
-	#pat = r'<(article|inproceedings) key=\"([\w\/-]+)\">(.*?)</\1>'
-	auth = r'<author>(.*?)</author>'
-	titl = r'<title>(.*?)</title>'
-	jour = r'<(journal|booktitle|publisher)>(.*?)</\1>'
-	year = r'<year>(.*?)</year>'
-    docid = r'doc_(.*?)_' #new not sure it works yet
-	try:
-		os.remove('index.txt')
-		os.remove('years.txt')
-		os.remove('recs.txt')
-	except:
-		pass
+Weight t,d = (1 + log TFt,d) · log N/
+                            DFt'''
 
-	file=open('index.txt','w')
+#for arg in sys.argv:
+    #print(arg)
 
-	f=open(x'.txt','r') #new not sure it works
-	fi=open('recs.txt','w')
+def create_zone_index(doc_dir, ind_dir):
+    print("create_zone_index selected")
+    index = open(ind_dir+'/index.txt', 'w')
+    for filename in os.listdir(doc_dir):
+        file_path = doc_dir+'/'+filename
+        doc_id =os.path.splitext(filename)[0]
+        doc_id = doc_id.split('_')
+        docnum = doc_id[1]
+        title = doc_id[2:]
+        #print(title)
+        file = open(file_path, 'r')
+        for line in file:
+            word = line.strip()
+            words = line.split(" ")
+            print(file[word])
+            poop = create_index(file[word])
+            line1 = "{}\t:{}\n".format(docnum, poop)
+            index.write(line1)
+        file.close()
+    index.close()
+def create_index (data):
+    index = defaultdict(list)
+    for i, tokens in enumerate(data):
+        for token in tokens:
+            index[tokens].append(i)
 
-	for line in takein:
-		m = re.search(pat, line)
-		if m:
-			key = m.group(2)
-			inner = m.group(3)
-			m2 = re.findall(auth, inner)
-			m3 = re.findall(titl, inner)
-			m4 = re.findall(jour, inner)
-			m5 = re.findall(year, inner)
-			lin = "{}:{}".format(key,line)  
-			fi.write(lin)
+    return index
 
-			for t in m3:
-				new = re.split("\W", t)
-				for i in new:
-					if len(i) > 2:
-						i = i.lower()
-						line = "t-{}:{}\n".format(i, key)
-						file.write(line)
 
-			for o in m4:
-				o = o[1]
-				new = re.split("\W", o)
-				for i in new:
-					if len(i) > 2:
-						i = i.lower()
-						line = "o-{}:{}\n".format(i, key)
-						file.write(line)
 
-			for a in m2:
-				new = re.split("\W", a)
-				for i in new:
-					if len(i) > 2:
-						i = i.lower()
-						line = "a-{}:{}\n".format(i, key)
-						file.write(line)
 
-			for t in m5:
-				new = re.split("\W", t)
-				for i in new:
-					if len(i) > 2:
-						i = i.lower()
-						line = "{}:{}\n".format(i, key)
-						f.write(line)
-	file.close()
-	f.close()
-	fi.close()
-terms()
+
+
+
+   # pat = r'<(article|inproceedings) key=\"([\w\/-]+)\">(.*?)</\1>'
+    
+def zone_scorer(dir, k, g, q):
+    print("zone scorer selected")
+
+def main():
+    what_to_do =sys.argv[1]
+    if what_to_do == './create_zone_index':
+        create_zone_index(sys.argv[2], sys.argv[3])
+        #print_index(sys.argv[2])
+    elif what_to_do == './zone_scorer':
+        zone_scorer(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    else:
+        print("error: command line arguments ")
+    
+
+
+if __name__ == "__main__":
+    main()
+
