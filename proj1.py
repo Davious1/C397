@@ -52,17 +52,6 @@ from collections import defaultdict
 #nltk.download('punkt')
 takein = sys.stdin
 #ZONE SCORING
-'''
-How do we compute the score of a query-document pair?
-• If no query term occurs in the document: score should be 0.
-• The more frequent a query term in the document, the higher
-the score
-• The more query terms occur in the document, the higher the
-score
-We will look at a number of alternatives for doing this.
-
-Weight t,d = (1 + log TFt,d) · log N/
-                            DFt'''
 
 #for arg in sys.argv:
     #print(arg)
@@ -78,43 +67,34 @@ def create_zone_index(doc_dir, ind_dir):
         title = doc_id[2:]
         print(title)
         file = open(file_path, 'r')
-        index = defaultdict(list)
+        index = idict(list)
         for words in file:
-            #word = line.strip()
+            
             word = words.split(" ")
-            #print(word)
 
-            #poop = create_index(word, docnum) 
-            #index = defaultdict(list)
-    
             for i, tokens in enumerate(word):
-        #print(tokens) #good one
-        #for token in tokens:
-            #print(token)
-                #tokens.strip("'")
+                index2 = idict(list)
                 doc_pos = "{}:{},".format(  docnum, i,)
-                index[tokens].append(doc_pos)
-      
-            print(index)
-    
-    for i, tokens in enumerate(data):
-        #print(tokens) #good one
-        #for token in tokens:
-            #print(token)
-        tokens.strip("'")
-        index[tokens].append(i)
-        #poop = (tokens, docnum\n)
-        #print('\n')
-        ##line1 = "{}\t{}:{}{}".format(data, docnum, tokens, '\n') #tokens = word index[tokens]=position of word in document
-        ##print(line1)
-    #print(index)
-        #index.write(line1)
-    #print(index)
+                index2[tokens].append(doc_pos)
+        index.update(index2)
+        print(index)
+        line1 = "{}".format(index)
+        index_file.write(line1)
+
+        file.close()
+    #index_string = "{}".format(index_file)
+    #for words in index_file:
+
+    index_file.close()
+ 
 
 
-    return index
 
 
+def print_index (data):
+    index_file = open(ind_dir+'/index.txt', 'r')
+    print(index_file)
+    index_file.close()
 
 
 
@@ -129,7 +109,8 @@ def main():
     what_to_do =sys.argv[1]
     if what_to_do == './create_zone_index':
         create_zone_index(sys.argv[2], sys.argv[3])
-        #print_index(sys.argv[2])
+    elif  what_to_do == './print_index':
+        print_index(sys.argv[2])
     elif what_to_do == './zone_scorer':
         zone_scorer(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
     else:
@@ -139,4 +120,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
