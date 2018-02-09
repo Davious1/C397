@@ -49,11 +49,10 @@ import re
 import os
 import argparse
 from collections import defaultdict
-import nltk 
-nltk.download('punkt')
+#import nltk 
+#nltk.download('punkt')
 takein = sys.stdin
 #ZONE SCORING
-
 
 #for arg in sys.argv:
     #print(arg)
@@ -69,57 +68,34 @@ def create_zone_index(doc_dir, ind_dir):
         title = doc_id[2:]
         print(title)
         file = open(file_path, 'r')
-        index = defaultdict(list)
-
-        tokenized = nltk.data.load('tokenizers/punkt/english.pickle')
+        index = idict(list)
         for words in file:
+            
+            word = words.split(" ")
 
-           
-            tokenized = nltk.data.load('tokenizers/punkt/english.pickle')
-            #word = tokenized.split(" ")
-            print(''.join(tokenized.tokenize(file.strip())))
             for i, tokens in enumerate(word):
-                
-                #nltk part
-
-
-                tokenized = nltk.data.load('tokenizers/punkt/english.pickle')
-                print(''.join(tokenized.tokenize(text.strip())))
+                index2 = idict(list)
                 doc_pos = "{}:{},".format(  docnum, i,)
-                index[tokens].append(doc_pos)
-      
-            print(index)
-
-            line1 = "{}\n".format(index)
-            index_file.write(line1)
+                index2[tokens].append(doc_pos)
+        index.update(index2)
+        print(index)
+        line1 = "{}".format(index)
+        index_file.write(line1)
 
         file.close()
+    #index_string = "{}".format(index_file)
+    #for words in index_file:
+
     index_file.close()
+ 
 
 
 
 
-def create_index (data, docnum):
-    index = defaultdict(list)
-    
-    for i, tokens in enumerate(data):
-        #print(tokens) #good one
-        #for token in tokens:
-            #print(token)
-        tokens.strip("'")
-        index[tokens].append(i)
-        #poop = (tokens, docnum\n)
-        #print('\n')
-        ##line1 = "{}\t{}:{}{}".format(data, docnum, tokens, '\n') #tokens = word index[tokens]=position of word in document
-        ##print(line1)
-    #print(index)
-        #index.write(line1)
-    #print(index)
-
-
-    return index
-
-
+def print_index (data):
+    index_file = open(ind_dir+'/index.txt', 'r')
+    print(index_file)
+    index_file.close()
 
 
 
@@ -134,7 +110,8 @@ def main():
     what_to_do =sys.argv[1]
     if what_to_do == './create_zone_index':
         create_zone_index(sys.argv[2], sys.argv[3])
-        #print_index(sys.argv[2])
+    elif  what_to_do == './print_index':
+        print_index(sys.argv[2])
     elif what_to_do == './zone_scorer':
         zone_scorer(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
     else:
@@ -144,4 +121,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
