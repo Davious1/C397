@@ -52,33 +52,30 @@ from collections import defaultdict
 #import nltk 
 #nltk.download('punkt')
 takein = sys.stdin
-#ZONE SCORING
 
-#for arg in sys.argv:
-    #print(arg)
-
-def create_zone_index(doc_dir, ind_dir):
-    print("create_zone_index selected")
+def create_index(doc_dir, ind_dir):
+    #print("create_zone_index selected") #test that command line arguments pass
     index_file = open(ind_dir+'/index.txt', 'w')
     for filename in os.listdir(doc_dir):
-        file_path = doc_dir+'/'+filename
-        doc_id =os.path.splitext(filename)[0]
+        file_path = doc_dir+'/'+filename #to open each file
+        doc_id =os.path.splitext(filename)[0] 
         doc_id = doc_id.split('_')
-        docnum = doc_id[1]
+        docnum = doc_id[1]# get doc number eg. doc_1 = 1
         title = doc_id[2:]
-        print(title)
+        #print(title) #test if title is seperated properly whether each file is passed through
+
         file = open(file_path, 'r')
-        index = idict(list)
+        index = defaultdict(list)
         for words in file:
             
             word = words.split(" ")
-
+            index2 = defaultdict(list)
             for i, tokens in enumerate(word):
-                index2 = idict(list)
+                
                 doc_pos = "{}:{},".format(  docnum, i,)
                 index2[tokens].append(doc_pos)
         index.update(index2)
-        print(index)
+        #print(index) # test if index is creating doc_num:doc_pos
         line1 = "{}".format(index)
         index_file.write(line1)
 
@@ -108,8 +105,8 @@ def zone_scorer(dir, k, g, q):
 
 def main():
     what_to_do =sys.argv[1]
-    if what_to_do == './create_zone_index':
-        create_zone_index(sys.argv[2], sys.argv[3])
+    if what_to_do == './create_index':
+        create_index(sys.argv[2], sys.argv[3])
     elif  what_to_do == './print_index':
         print_index(sys.argv[2])
     elif what_to_do == './zone_scorer':
