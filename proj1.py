@@ -43,17 +43,26 @@
 
 #There should be two zones: title and body. The body is the content of the file, while the title is encoded in the file name. IMPORTANT: when tokenizing the titles, make sure to separate words connected by _ (e.g., 101_Dalmatians_1996 is tokenized into 101 Dalmatians and 1996).
 
-
 import sys
 import re
 import os
 import argparse
 from collections import defaultdict
-import nltk 
-nltk.download('punkt')
+#import nltk 
+#nltk.download('punkt')
 takein = sys.stdin
 #ZONE SCORING
+'''
+How do we compute the score of a query-document pair?
+• If no query term occurs in the document: score should be 0.
+• The more frequent a query term in the document, the higher
+the score
+• The more query terms occur in the document, the higher the
+score
+We will look at a number of alternatives for doing this.
 
+Weight t,d = (1 + log TFt,d) · log N/
+                            DFt'''
 
 #for arg in sys.argv:
     #print(arg)
@@ -70,37 +79,23 @@ def create_zone_index(doc_dir, ind_dir):
         print(title)
         file = open(file_path, 'r')
         index = defaultdict(list)
-
-        tokenized = nltk.data.load('tokenizers/punkt/english.pickle')
         for words in file:
+            #word = line.strip()
+            word = words.split(" ")
+            #print(word)
 
-           
-            tokenized = nltk.data.load('tokenizers/punkt/english.pickle')
-            #word = tokenized.split(" ")
-            print(''.join(tokenized.tokenize(file.strip())))
+            #poop = create_index(word, docnum) 
+            #index = defaultdict(list)
+    
             for i, tokens in enumerate(word):
-                
-                #nltk part
-
-
-                tokenized = nltk.data.load('tokenizers/punkt/english.pickle')
-                print(''.join(tokenized.tokenize(text.strip())))
+        #print(tokens) #good one
+        #for token in tokens:
+            #print(token)
+                #tokens.strip("'")
                 doc_pos = "{}:{},".format(  docnum, i,)
                 index[tokens].append(doc_pos)
       
             print(index)
-
-            line1 = "{}\n".format(index)
-            index_file.write(line1)
-
-        file.close()
-    index_file.close()
-
-
-
-
-def create_index (data, docnum):
-    index = defaultdict(list)
     
     for i, tokens in enumerate(data):
         #print(tokens) #good one
