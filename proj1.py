@@ -48,50 +48,74 @@ import sys
 import re
 import os
 import argparse
-import nltk impor
 from collections import defaultdict
+import nltk 
+nltk.download('punkt')
 takein = sys.stdin
 #ZONE SCORING
-'''
-How do we compute the score of a query-document pair?
-• If no query term occurs in the document: score should be 0.
-• The more frequent a query term in the document, the higher
-the score
-• The more query terms occur in the document, the higher the
-score
-We will look at a number of alternatives for doing this.
 
-Weight t,d = (1 + log TFt,d) · log N/
-                            DFt'''
 
 #for arg in sys.argv:
     #print(arg)
 
 def create_zone_index(doc_dir, ind_dir):
     print("create_zone_index selected")
-    index = open(ind_dir+'/index.txt', 'w')
+    index_file = open(ind_dir+'/index.txt', 'w')
     for filename in os.listdir(doc_dir):
         file_path = doc_dir+'/'+filename
         doc_id =os.path.splitext(filename)[0]
         doc_id = doc_id.split('_')
         docnum = doc_id[1]
         title = doc_id[2:]
-        #print(title)
+        print(title)
         file = open(file_path, 'r')
-        for line in file:
-            word = line.strip()
-            words = line.split(" ")
-            print(file[word])
-            poop = create_index(file[word])
-            line1 = "{}\t:{}\n".format(docnum, poop)
-            index.write(line1)
+        index = defaultdict(list)
+
+        tokenized = nltk.data.load('tokenizers/punkt/english.pickle')
+        for words in file:
+
+           
+            tokenized = nltk.data.load('tokenizers/punkt/english.pickle')
+            #word = tokenized.split(" ")
+            print(''.join(tokenized.tokenize(file.strip())))
+            for i, tokens in enumerate(word):
+                
+                #nltk part
+
+
+                tokenized = nltk.data.load('tokenizers/punkt/english.pickle')
+                print(''.join(tokenized.tokenize(text.strip())))
+                doc_pos = "{}:{},".format(  docnum, i,)
+                index[tokens].append(doc_pos)
+      
+            print(index)
+
+            line1 = "{}\n".format(index)
+            index_file.write(line1)
+
         file.close()
-    index.close()
-def create_index (data):
+    index_file.close()
+
+
+
+
+def create_index (data, docnum):
     index = defaultdict(list)
+    
     for i, tokens in enumerate(data):
-        for token in tokens:
-            index[tokens].append(i)
+        #print(tokens) #good one
+        #for token in tokens:
+            #print(token)
+        tokens.strip("'")
+        index[tokens].append(i)
+        #poop = (tokens, docnum\n)
+        #print('\n')
+        ##line1 = "{}\t{}:{}{}".format(data, docnum, tokens, '\n') #tokens = word index[tokens]=position of word in document
+        ##print(line1)
+    #print(index)
+        #index.write(line1)
+    #print(index)
+
 
     return index
 
